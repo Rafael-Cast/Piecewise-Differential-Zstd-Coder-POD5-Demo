@@ -1,0 +1,3 @@
+[submodule "src/c++/lib-682-nanopore-compression"]
+	path = src/c++/lib-682-nanopore-compression
+	url = https://github.com/Rafael-Cast/Piecewise-Differential-Zstd-Coder.git
