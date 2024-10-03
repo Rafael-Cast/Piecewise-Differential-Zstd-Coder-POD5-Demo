@@ -18,6 +18,6 @@ include_directories(${FQZCOMP_INCLUDE_DIR})
 include_directories(${PGNANOCOMPRESSION_INCLUDE_DIR})
 
 add_subdirectory(src/c++)
-#add_subdirectory(pod5)
+add_subdirectory(pod5)
 
 SET(BUILD_TYPE "BUILD_TYPE" CACHE STRING "NULL")

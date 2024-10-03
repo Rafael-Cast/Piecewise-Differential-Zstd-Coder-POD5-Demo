@@ -61,7 +61,6 @@ activate_env () {
 initial_setup () {
     submodules
     compile_python_venv
-    build_original_pod5_version
     pre-commit uninstall
     mkdir build
     cmake_configure
