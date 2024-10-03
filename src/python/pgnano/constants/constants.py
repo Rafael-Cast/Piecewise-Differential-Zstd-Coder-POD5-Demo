@@ -1,0 +1,17 @@
+project_root="/data/pgnanoraw/pod5_fork"
+data_root_path = "/data/datananoraw"
+levels_path = data_root_path + "/levels"
+bam_path = "/data/pgnanoraw/basecall_files"
+stats_analysis_root_path = data_root_path + "/data_analysis"
+build_path = project_root + "/build"
+venv_interpreter_path = "/data/pgnanoraw/.conda/envs/pgnano/bin/python3.11"
+copy_build_path = build_path + "/src/c++/copy"
+compress_build_path = build_path + "/src/c++/compress"
+decompress_build_path = build_path + "/src/c++/decompress"
+observational_equivalence_test_file = project_root + "/src/python/pgnano/main_scripts/ont_check_pod5_files_equal.py"
+double_conversion_test_file = project_root + "/src/python/pgnano/test_scripts/double_conversion.py"
+data_descriptor_filename = "data_descriptor.json"
+author_map_filename = "author_map.json"
+organisms_map_filename = "organisms_map.json"
+SEED = 10
+SAMPLE_NUMBER = 15
