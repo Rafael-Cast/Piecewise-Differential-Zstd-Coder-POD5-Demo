@@ -1,7 +1,7 @@
-#include "pod5_format/pgnano/compressor.h"
-#include "pod5_format/pgnano/decompressor.h"
+#include "pod5_format/PDZ/compressor.h"
+#include "pod5_format/PDZ/decompressor.h"
 #include "pod5_format/read_table_utils.h"
-#include "pod5_format/pgnano/pore_type_server.h"
+#include "pod5_format/PDZ/pore_type_server.h"
 #include <random>
 
 // FIXME: use a unit test framework (Catch2)
@@ -15,8 +15,8 @@ void case_1()
     {
         x[i] = i % 256;
     }
-    pgnano::Compressor compressor;
-    pgnano::PGNanoWriterState writing_state;
+    pdz::Compressor compressor;
+    pdz::PDZWriterState writing_state;
     writing_state.m_pore_type_server->put_pore_type(read_data.pore_type,"");
     compressor.compress(read_data, samples, x, out, writing_state);
     compressor.reset();
@@ -33,13 +33,13 @@ void case_2()
     {
         compressed_in[i] = i % 256;
     }
-    pgnano::Compressor compressor;
-    pgnano::PGNanoWriterState writing_state;
-    pgnano::PGNanoReaderState reader_state;
+    pdz::Compressor compressor;
+    pdz::PDZWriterState writing_state;
+    pdz::PDZReaderState reader_state;
     writing_state.m_pore_type_server->put_pore_type(read_data.pore_type,"");
     compressor.compress(read_data, samples, compressed_in, compressed_out, writing_state);
     compressor.reset();
-    pgnano::Decompressor decompressor;
+    pdz::Decompressor decompressor;
     decompressor.decompress(compressed_out, decompressed_out, 100, reader_state);
     for (size_t i = 0; i < samples; i++)
     {
@@ -52,10 +52,10 @@ void case_3()
     pod5::ReadData read_data;
     read_data.pore_type = 0;
     size_t samples = 1024;
-    pgnano::Compressor compressor;
-    pgnano::Decompressor decompressor;
-    pgnano::PGNanoWriterState writing_state;
-    pgnano::PGNanoReaderState reader_state;
+    pdz::Compressor compressor;
+    pdz::Decompressor decompressor;
+    pdz::PDZWriterState writing_state;
+    pdz::PDZReaderState reader_state;
     writing_state.m_pore_type_server->put_pore_type(read_data.pore_type,"");
     int16_t compressed_in[samples];
     uint8_t compressed_out[compressor.compressed_signal_max_size(samples,read_data)];
@@ -79,10 +79,10 @@ void case_4(size_t samples, int seed)
     rnd.seed(seed);
     pod5::ReadData read_data;
     read_data.pore_type = 0;
-    pgnano::Compressor compressor;
-    pgnano::Decompressor decompressor;
-    pgnano::PGNanoWriterState writing_state;
-    pgnano::PGNanoReaderState reader_state;
+    pdz::Compressor compressor;
+    pdz::Decompressor decompressor;
+    pdz::PDZWriterState writing_state;
+    pdz::PDZReaderState reader_state;
     writing_state.m_pore_type_server->put_pore_type(read_data.pore_type,"");
     int16_t compressed_in[samples];
     uint8_t compressed_out[compressor.compressed_signal_max_size(samples,read_data)];

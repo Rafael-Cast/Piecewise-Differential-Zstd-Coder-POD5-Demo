@@ -7,7 +7,7 @@
 #include <arrow/array/array_primitive.h>
 #include <arrow/ipc/reader.h>
 
-#include "pod5_format/pgnano/pgnano.h"
+#include "pod5_format/PDZ/pdz.h"
 
 #include <iostream>
 
@@ -42,11 +42,11 @@ SignalTableRecordBatch::SignalTableRecordBatch(
     std::shared_ptr<arrow::RecordBatch> const & batch,
     SignalTableSchemaDescription field_locations,
     arrow::MemoryPool * pool,
-    pgnano::PGNanoReaderState * pgnano_state)
+    pdz::PDZReaderState * pdz_state)
 : TableRecordBatch(batch)
 , m_field_locations(field_locations)
 , m_pool(pool)
-, m_pgnano_state(pgnano_state)
+, m_pdz_state(pdz_state)
 {
 }
 
@@ -66,9 +66,9 @@ std::shared_ptr<VbzSignalArray> SignalTableRecordBatch::vbz_signal_column() cons
     return std::static_pointer_cast<VbzSignalArray>(batch()->column(m_field_locations.signal));
 }
 
-std::shared_ptr<PGNanoSignalArray> SignalTableRecordBatch::pgnano_signal_column() const
+std::shared_ptr<PDZSignalArray> SignalTableRecordBatch::pdz_signal_column() const
 {
-    return std::static_pointer_cast<PGNanoSignalArray>(batch()->column(m_field_locations.signal));
+    return std::static_pointer_cast<PDZSignalArray>(batch()->column(m_field_locations.signal));
 }
 
 std::shared_ptr<arrow::UInt32Array> SignalTableRecordBatch::samples_column() const
@@ -89,8 +89,8 @@ Result<std::size_t> SignalTableRecordBatch::samples_byte_count(std::size_t row_i
         auto signal_compressed = signal_column->Value(row_index);
         return signal_compressed.size();
     }
-    case SignalType::PGNanoSignal: {
-        auto signal_column = pgnano_signal_column();
+    case SignalType::PDZSignal: {
+        auto signal_column = pdz_signal_column();
         auto signal_compressed = signal_column->Value(row_index);
         return signal_compressed.size();
     }
@@ -132,10 +132,10 @@ Status SignalTableRecordBatch::extract_signal_row(
         auto signal_compressed = signal_column->Value(row_index);
         return pod5::decompress_signal(signal_compressed, m_pool, samples);
     }
-    case SignalType::PGNanoSignal: {
-        auto signal_column = pgnano_signal_column();
+    case SignalType::PDZSignal: {
+        auto signal_column = pdz_signal_column();
         auto signal_compressed = signal_column->Value(row_index);
-        return pgnano::decompress_signal(signal_compressed, m_pool, samples, *m_pgnano_state);
+        return pdz::decompress_signal(signal_compressed, m_pool, samples, *m_pdz_state);
     }
     }
 
@@ -172,7 +172,7 @@ Result<std::shared_ptr<arrow::Buffer>> SignalTableRecordBatch::extract_signal_ro
         auto signal_column = vbz_signal_column();
         return signal_column->ValueAsBuffer(row_index);
     }
-    case SignalType::PGNanoSignal: {
+    case SignalType::PDZSignal: {
         auto signal_column = vbz_signal_column();
         return signal_column->ValueAsBuffer(row_index);
     }
@@ -199,7 +199,7 @@ SignalTableReader::SignalTableReader(
 , m_table_batches(num_record_batches)
 , m_batch_size(batch_size)
 {
-    m_pgnano_state = std::make_unique<pgnano::PGNanoReaderState>();
+    m_pdz_state = std::make_unique<pdz::PDZReaderState>();
 }
 
 SignalTableReader::SignalTableReader(SignalTableReader && other)
@@ -209,7 +209,7 @@ SignalTableReader::SignalTableReader(SignalTableReader && other)
 , m_max_cached_table_batches(other.m_max_cached_table_batches)
 , m_table_batches(std::move(other.m_table_batches))
 , m_batch_size(other.m_batch_size)
-, m_pgnano_state(std::move(other.m_pgnano_state))
+, m_pdz_state(std::move(other.m_pdz_state))
 {
 }
 
@@ -220,7 +220,7 @@ SignalTableReader & SignalTableReader::operator=(SignalTableReader && other)
     m_max_cached_table_batches = other.m_max_cached_table_batches;
     m_batch_size = other.m_batch_size;
     m_table_batches = std::move(other.m_table_batches);
-    m_pgnano_state = std::move(other.m_pgnano_state);
+    m_pdz_state = std::move(other.m_pdz_state);
     static_cast<TableReader &>(*this) = std::move(static_cast<TableReader &>(other));
     return *this;
 }
@@ -229,7 +229,7 @@ Result<SignalTableRecordBatch> SignalTableReader::read_record_batch(std::size_t 
 {
     std::lock_guard<std::mutex> l(m_batch_get_mutex);
     if (m_last_read_record_batch_index == i) {
-        return pod5::SignalTableRecordBatch{m_last_read_record_batch, m_field_locations, m_pool, m_pgnano_state.get()};
+        return pod5::SignalTableRecordBatch{m_last_read_record_batch, m_field_locations, m_pool, m_pdz_state.get()};
     }
 
     auto it = m_table_batches.find(i);
@@ -249,7 +249,7 @@ Result<SignalTableRecordBatch> SignalTableReader::read_record_batch(std::size_t 
     auto inserted = m_table_batches.emplace(
         i,
         CachedItem{
-            pod5::SignalTableRecordBatch{m_last_read_record_batch, m_field_locations, m_pool, m_pgnano_state.get()},
+            pod5::SignalTableRecordBatch{m_last_read_record_batch, m_field_locations, m_pool, m_pdz_state.get()},
             m_last_access_index++});
     return inserted.first->second.item;
 }

@@ -2,10 +2,10 @@
 
 #include "macros.h"
 #include "codecs.h"
-#include "pgnano_writer_state.h"
+#include "pdz_writer_state.h"
 #include "pore_type_server.h"
 
-namespace pgnano
+namespace pdz
 {
     void Compressor::reset()
     {
@@ -18,7 +18,7 @@ namespace pgnano
         m_range_coder.StartEncode();
     }
 
-    void Compressor::compress_metadata(pgnano::Metadata const & metadata, uint8_t* const & dest) 
+    void Compressor::compress_metadata(pdz::Metadata const & metadata, uint8_t* const & dest) 
     {
         size_t mask = 0xFF;
         for (size_t i = 0; i < sizeof(size_t); i++)
@@ -29,7 +29,7 @@ namespace pgnano
         dest[sizeof(size_t)] = from_pore_type(metadata.pore_type) & 0xFF;
     }
 
-    void Compressor::compress_header(pgnano::Header const & header, uint8_t* const & dest)
+    void Compressor::compress_header(pdz::Header const & header, uint8_t* const & dest)
     {
         dest[0] = header.is_raw ? 1 : 0;
         compress_metadata(header.metadata, dest + 1);
@@ -69,17 +69,17 @@ namespace pgnano
         return {bytes_written, false};
     }
 
-    size_t Compressor::compress(pod5::ReadData const & read_data, std::size_t sample_count, int16_t const * samples, uint8_t* const & dest, pgnano::PGNanoWriterState & state) 
+    size_t Compressor::compress(pod5::ReadData const & read_data, std::size_t sample_count, int16_t const * samples, uint8_t* const & dest, pdz::PDZWriterState & state) 
     {
-        pgnano::Metadata metadata;
-        pgnano::Header header;
-        pgnano::PGNANO_PORE_TYPE pore_type = state.m_pore_type_server->get_pore_type(read_data.pore_type);
+        pdz::Metadata metadata;
+        pdz::Header header;
+        pdz::PDZ_PORE_TYPE pore_type = state.m_pore_type_server->get_pore_type(read_data.pore_type);
         metadata.m_read_data = read_data;
         metadata.samples = sample_count;
         metadata.pore_type = pore_type;
         header.is_raw = false;
         header.metadata = metadata;
-        size_t offset = pgnano::header_size;
+        size_t offset = pdz::header_size;
         auto compression_result = compress_signal(read_data, sample_count, samples, dest + offset);
         size_t compressed_byte_count = compression_result.bytes_written;
         header.is_raw = compression_result.is_raw;

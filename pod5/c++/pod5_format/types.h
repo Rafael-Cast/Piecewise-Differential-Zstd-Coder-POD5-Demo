@@ -83,11 +83,11 @@ POD5_FORMAT_EXPORT pod5::Status register_extension_types();
 /// \brief Unregister all required extension types.
 POD5_FORMAT_EXPORT pod5::Status unregister_extension_types();
 
-class POD5_FORMAT_EXPORT PGNanoSignalType : public arrow::ExtensionType {
+class POD5_FORMAT_EXPORT PDZSignalType : public arrow::ExtensionType {
 public:
-    PGNanoSignalType() : ExtensionType(arrow::large_binary()) {}
+    PDZSignalType() : ExtensionType(arrow::large_binary()) {}
 
-    std::string extension_name() const override { return "pgnano.signal"; }
+    std::string extension_name() const override { return "pdz.signal"; }
 
     bool ExtensionEquals(ExtensionType const & other) const override;
     std::shared_ptr<arrow::Array> MakeArray(std::shared_ptr<arrow::ArrayData> data) const override;
@@ -97,10 +97,10 @@ public:
         std::string const & serialized_data) const override;
 };
 
-class POD5_FORMAT_EXPORT PGNanoSignalArray : public arrow::ExtensionArray
+class POD5_FORMAT_EXPORT PDZSignalArray : public arrow::ExtensionArray
 {
 public:
-    using IteratorType = arrow::stl::ArrayIterator<PGNanoSignalArray>;
+    using IteratorType = arrow::stl::ArrayIterator<PDZSignalArray>;
 
     gsl::span<std::uint8_t const> Value(int64_t i) const;
     std::shared_ptr<arrow::Buffer> ValueAsBuffer(int64_t i) const;
@@ -108,6 +108,6 @@ public:
     using ExtensionArray::ExtensionArray;
 };
 
-std::shared_ptr<PGNanoSignalType> pgnano_signal();
+std::shared_ptr<PDZSignalType> pdz_signal();
 
 }  // namespace pod5

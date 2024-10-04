@@ -518,8 +518,8 @@ enum CompressionOption {
     VBZ_SIGNAL_COMPRESSION = 1,
     /// \brief Write signals uncompressed to tables.
     UNCOMPRESSED_SIGNAL = 2,
-    /// \brief use PGNano to compress read singals in tables
-    PGNANO_SIGNAL_COMPRESSION = 3
+    /// \brief use PDZ to compress read signals in tables
+    PDZ_SIGNAL_COMPRESSION = 3
 };
 
 // Options to control how a file is written.
@@ -707,8 +707,6 @@ POD5_FORMAT_EXPORT pod5_error_t pod5_vbz_decompress_signal(
 /// \param          read_id           A 16 byte binary formatted UUID.
 /// \param[out]     read_id_string    Output string containing the string formatted UUID (expects a string of at least 37 bytes, one null byte is written.)
 POD5_FORMAT_EXPORT pod5_error_t pod5_format_read_id(read_id_t const read_id, char * read_id_string);
-
-POD5_FORMAT_EXPORT pod5_error_t pgnano_get_compression_stats(uint_fast64_t * bytes_written, uint_fast64_t * total_sample_count);
 
 #ifdef __cplusplus
 }

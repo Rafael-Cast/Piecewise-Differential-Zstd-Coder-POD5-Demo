@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-namespace pgnano
+namespace pdz
 {
 
 enum Nucleotides {

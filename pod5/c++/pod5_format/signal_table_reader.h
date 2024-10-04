@@ -6,7 +6,7 @@
 #include "pod5_format/signal_table_schema.h"
 #include "pod5_format/table_reader.h"
 #include "pod5_format/types.h"
-#include "pod5_format/pgnano/pgnano_reader_state.h"
+#include "pod5_format/PDZ/pdz_reader_state.h"
 
 #include <arrow/io/type_fwd.h>
 #include <boost/optional.hpp>
@@ -39,12 +39,12 @@ public:
         std::shared_ptr<arrow::RecordBatch> const & batch,
         SignalTableSchemaDescription field_locations,
         arrow::MemoryPool * pool,
-        pgnano::PGNanoReaderState * pgnano_state);
+        pdz::PDZReaderState * pdz_state);
 
     std::shared_ptr<UuidArray> read_id_column() const;
     std::shared_ptr<arrow::LargeListArray> uncompressed_signal_column() const;
     std::shared_ptr<VbzSignalArray> vbz_signal_column() const;
-    std::shared_ptr<PGNanoSignalArray> pgnano_signal_column() const;
+    std::shared_ptr<PDZSignalArray> pdz_signal_column() const;
     std::shared_ptr<arrow::UInt32Array> samples_column() const;
 
     Result<std::size_t> samples_byte_count(std::size_t row_index) const;
@@ -56,7 +56,7 @@ public:
 private:
     SignalTableSchemaDescription m_field_locations;
     arrow::MemoryPool * m_pool;
-    pgnano::PGNanoReaderState * m_pgnano_state;
+    pdz::PDZReaderState * m_pdz_state;
 };
 
 class POD5_FORMAT_EXPORT SignalTableReader : public TableReader {
@@ -127,7 +127,7 @@ private:
 
     friend struct SignalTableReaderCacheCleaner;
 
-    std::unique_ptr<pgnano::PGNanoReaderState> m_pgnano_state;
+    std::unique_ptr<pdz::PDZReaderState> m_pdz_state;
 };
 
 POD5_FORMAT_EXPORT Result<SignalTableReader> make_signal_table_reader(

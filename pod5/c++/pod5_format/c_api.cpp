@@ -5,7 +5,7 @@
 #include "pod5_format/read_table_reader.h"
 #include "pod5_format/signal_compression.h"
 #include "pod5_format/signal_table_reader.h"
-#include "pod5_format/pgnano/pgnano.h"
+#include "pod5_format/PDZ/pdz.h"
 
 #include <arrow/array/array_binary.h>
 #include <arrow/array/array_dict.h>
@@ -139,8 +139,8 @@ pod5::FileWriterOptions make_internal_writer_options(Pod5WriterOptions const * o
 
         if (options->signal_compression_type == UNCOMPRESSED_SIGNAL) {
             internal_options.set_signal_type(pod5::SignalType::UncompressedSignal);
-        } else if (options->signal_compression_type == PGNANO_SIGNAL_COMPRESSION) {
-            internal_options.set_signal_type(pod5::SignalType::PGNanoSignal);
+        } else if (options->signal_compression_type == PDZ_SIGNAL_COMPRESSION) {
+            internal_options.set_signal_type(pod5::SignalType::PDZSignal);
         }
 
         if (options->signal_table_batch_size != 0) {
@@ -1254,15 +1254,6 @@ pod5_error_t pod5_format_read_id(read_id_t const read_id, char * read_id_string)
 
     return POD5_OK;
 }
-}
-
-pod5_error_t pgnano_get_compression_stats(uint_fast64_t * bytes_written, uint_fast64_t * total_sample_count)
-{
-    pod5_reset_error();
-    auto stats = pgnano::Compressor::get_compression_stats();
-    *bytes_written = stats.bytes_written;
-    *total_sample_count = stats.total_sample_size;
-    return POD5_OK;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

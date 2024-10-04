@@ -2,13 +2,13 @@
 
 #include "metadata.h"
 
-namespace pgnano
+namespace pdz
 {
 
 struct Header
 {
 public:
-    pgnano::Metadata metadata;
+    pdz::Metadata metadata;
     bool is_raw;
 };
 

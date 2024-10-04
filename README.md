@@ -1,6 +1,6 @@
 # Nanopore Compression Integrated Demo
 
-This project serves as a demo integrated into pod5 of our compression algorithm (286BitDistributionZstd).
+This project serves as a demo integrated into pod5 of our compression algorithm (PDZ, Piecewise Differential Zstd Coder).
 
 In here, you'll find a modified pod5 version, which adds a new compression method for the signal table which uses our compression algorithm, as well as a CLI utility program that uses standard pod5 C api methods to copy a source pod5 file into another pod5 file with the desired compression algorithm (Vbz, 286BitDistributionZstd, uncompressed) applied to the signal table.
 
@@ -9,7 +9,7 @@ You can either build the binary on your local environment or use our provided Do
 ## Local build
 
 The code was only tested in a Linux environment, no other OSes are tested.
-The most complex part of building this project are satifying it's dependencies. We used a strategy combining system libraries plus a conda environment, but feel free to use any other strategy to install required packages and libraries. We continue with a list of notable dependencies which you'll need to install (note that for most you'll need both the library and the development package):
+The most complex part of building this project are satisfying it's dependencies. We used a strategy combining system libraries plus a conda environment, but feel free to use any other strategy to install required packages and libraries. We continue with a list of notable dependencies which you'll need to install (note that for most you'll need both the library and the development package):
 
 ### Required dependencies
 
@@ -30,7 +30,7 @@ You also need to install the following Python packages (we used Python 3.11):
 
 ### Building the project
 
-To build the project you can simply use the provided build.sh script.
+To build the project you can simply use the provided build.sh script. Note that in order to use this script you **MUST** either provide a conda environment called PDZ, even if it's "empty" or comment out the `activate_conda` line in the script.
 For your first installation, you should run:
 
 `bash build.sh init`
@@ -58,7 +58,7 @@ To run the arguments pass the arguments as follows:
 Where `<compression_algorithm>` is one of:
 - `uncompressed` for no compression at all
 - `VBZ` for standard Vbz compression
-- `pgnano` for our novel compression algorithm
+- `PDZ` for our novel compression algorithm
 
 ## Getting a sample pod5 file
 

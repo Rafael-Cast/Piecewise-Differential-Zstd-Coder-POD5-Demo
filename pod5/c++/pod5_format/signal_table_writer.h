@@ -12,7 +12,7 @@
 
 #include "pod5_format/read_table_utils.h"
 
-#include "pod5_format/pgnano/pgnano_writer_state.h"
+#include "pod5_format/PDZ/pdz_writer_state.h"
 
 namespace arrow {
 class Schema;
@@ -38,15 +38,15 @@ struct VbzSignalBuilder {
     ExpandableBuffer<std::uint8_t> data_values;
 };
 
-struct PGNanoSignalBuilder {
+struct PDZSignalBuilder {
     ExpandableBuffer<std::int64_t> offset_values;
     ExpandableBuffer<std::uint8_t> data_values;
-    pgnano::PGNanoWriterState m_state;
+    pdz::PDZWriterState m_state;
 };
 
 class POD5_FORMAT_EXPORT SignalTableWriter {
 public:
-    using SignalBuilderVariant = boost::variant<UncompressedSignalBuilder, VbzSignalBuilder, PGNanoSignalBuilder>;
+    using SignalBuilderVariant = boost::variant<UncompressedSignalBuilder, VbzSignalBuilder, PDZSignalBuilder>;
 
     SignalTableWriter(
         std::shared_ptr<arrow::ipc::RecordBatchWriter> && writer,

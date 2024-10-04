@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-namespace pgnano
+namespace pdz
 {
 
 uint16_t signed_encode(int16_t x);

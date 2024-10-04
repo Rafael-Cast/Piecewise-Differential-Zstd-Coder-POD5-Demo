@@ -40,9 +40,9 @@ copy_cli_args parse_args(int argc, char **argv, char *curr_dir)
 	{
 		res.comp_opt = UNCOMPRESSED_SIGNAL;
 	}
-	else if (strncmp(argv[3], "--pgnano", 8) == 0)
+	else if (strncmp(argv[3], "--PDZ", 5) == 0)
 	{
-		res.comp_opt = PGNANO_SIGNAL_COMPRESSION;
+		res.comp_opt = PDZ_SIGNAL_COMPRESSION;
 	}
 	else
 	{
@@ -158,10 +158,6 @@ int main(int argc, char **argv)
 		}
 		LOG_PROGRAM_ERROR(pod5_free_read_batch(current_batch))
 	}
-
-	uint_fast64_t bytes_written, total_sample_count;
-	pgnano_get_compression_stats(&bytes_written, &total_sample_count);
-	std::cout << bytes_written << ";" << total_sample_count << std::endl;
 
 	free(curr_dir);
 	release_pod5_resources(reader, writer);

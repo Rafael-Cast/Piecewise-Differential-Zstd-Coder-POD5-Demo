@@ -3,7 +3,7 @@
 #include "pod5_format/read_table_utils.h"
 #include "known_pore_types.h"
 
-namespace pgnano
+namespace pdz
 {
 
 struct Metadata
@@ -11,7 +11,7 @@ struct Metadata
 public:
     pod5::ReadData m_read_data;
     size_t samples;
-    pgnano::PGNANO_PORE_TYPE pore_type = pgnano::PGNANO_PORE_TYPE::UNKNOWN;
+    pdz::PDZ_PORE_TYPE pore_type = pdz::PDZ_PORE_TYPE::UNKNOWN;
 };
 
 }

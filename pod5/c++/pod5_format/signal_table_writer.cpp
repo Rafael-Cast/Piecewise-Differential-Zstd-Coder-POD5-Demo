@@ -5,7 +5,7 @@
 #include "pod5_format/signal_compression.h"
 #include "pod5_format/types.h"
 
-#include "pod5_format/pgnano/pgnano.h"
+#include "pod5_format/PDZ/pdz.h"
 
 #include <arrow/array/builder_binary.h>
 #include <arrow/array/builder_nested.h>
@@ -39,7 +39,7 @@ public:
         return builder.data_values.reserve(m_row_count * m_approx_read_samples);
     }
 
-    Status operator()(PGNanoSignalBuilder & builder) const
+    Status operator()(PDZSignalBuilder & builder) const
     {
         ARROW_RETURN_NOT_OK(builder.offset_values.reserve(m_row_count + 1));
         return builder.data_values.reserve(m_row_count * m_approx_read_samples);
@@ -68,7 +68,7 @@ public:
         return builder.data_values.append_array(m_signal);
     }
 
-    Status operator()(PGNanoSignalBuilder & builder) const
+    Status operator()(PDZSignalBuilder & builder) const
     {
         ARROW_RETURN_NOT_OK(builder.offset_values.append(builder.data_values.size()));
         return builder.data_values.append_array(m_signal);
@@ -102,9 +102,9 @@ public:
             gsl::make_span(compressed_signal->data(), compressed_signal->size()));
     }
 
-    Status operator()(PGNanoSignalBuilder & builder) const
+    Status operator()(PDZSignalBuilder & builder) const
     {
-        ARROW_ASSIGN_OR_RAISE(auto compressed_signal, pgnano::compress_signal(m_signal, m_pool, m_read_data, m_is_last_batch, builder.m_state));
+        ARROW_ASSIGN_OR_RAISE(auto compressed_signal, pdz::compress_signal(m_signal, m_pool, m_read_data, m_is_last_batch, builder.m_state));
         
         ARROW_RETURN_NOT_OK(builder.offset_values.append(builder.data_values.size()));
         return builder.data_values.append_array(
@@ -148,7 +148,7 @@ public:
         return arrow::Status::OK();
     }
 
-    Status operator()(PGNanoSignalBuilder & builder) const
+    Status operator()(PDZSignalBuilder & builder) const
     {
         auto offsets_copy = builder.offset_values;
         ARROW_RETURN_NOT_OK(builder.offset_values.clear());
@@ -164,7 +164,7 @@ public:
         std::shared_ptr<arrow::Buffer> null_bitmap;
 
         *m_dest = arrow::MakeArray(
-            arrow::ArrayData::Make(pgnano_signal(), length, {null_bitmap, offsets, value_data}, 0, 0));
+            arrow::ArrayData::Make(pdz_signal(), length, {null_bitmap, offsets, value_data}, 0, 0));
         
         return arrow::Status::OK();
     }
@@ -178,7 +178,7 @@ public:
 
     Status operator()(UncompressedSignalBuilder &) { return Status::OK(); }
     Status operator()(VbzSignalBuilder &) { return Status::OK(); }
-    Status operator()(PGNanoSignalBuilder & builder)
+    Status operator()(PDZSignalBuilder & builder)
     {
         builder.m_state.m_pore_type_server->put_pore_type(m_idx, m_pore_type);
         return Status::OK();//FIXME: This operation can actually fail, but an exception will be raised
@@ -370,11 +370,11 @@ Result<SignalTableWriter> make_signal_table_writer(
         ARROW_RETURN_NOT_OK(vbz_builder.offset_values.init_buffer(pool));
         ARROW_RETURN_NOT_OK(vbz_builder.data_values.init_buffer(pool));
         signal_builder = vbz_builder;
-    } else if (compression_type == SignalType::PGNanoSignal) {
-        PGNanoSignalBuilder pgnano_builder;
-        ARROW_RETURN_NOT_OK(pgnano_builder.offset_values.init_buffer(pool));
-        ARROW_RETURN_NOT_OK(pgnano_builder.data_values.init_buffer(pool));
-        signal_builder = std::move(pgnano_builder);//FIXME:
+    } else if (compression_type == SignalType::PDZSignal) {
+        PDZSignalBuilder pdz_builder;
+        ARROW_RETURN_NOT_OK(pdz_builder.offset_values.init_buffer(pool));
+        ARROW_RETURN_NOT_OK(pdz_builder.data_values.init_buffer(pool));
+        signal_builder = std::move(pdz_builder);
     }
 
     auto signal_table_writer = SignalTableWriter(
