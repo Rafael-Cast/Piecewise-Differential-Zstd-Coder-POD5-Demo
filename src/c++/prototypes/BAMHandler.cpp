@@ -3,7 +3,7 @@
 int main()
 {
 
-    pgnano::BAMHandler h;
+    pdz::BAMHandler h;
     h.open_BAM_file("","");
     h.build_query_index();
     return 0;

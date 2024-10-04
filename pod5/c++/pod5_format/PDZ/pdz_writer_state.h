@@ -3,7 +3,7 @@
 #include <memory>
 #include "pore_type_server.h"
 
-namespace pgnano
+namespace pdz
 {
 
 class PDZWriterState

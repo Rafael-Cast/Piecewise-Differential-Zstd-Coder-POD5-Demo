@@ -41,7 +41,7 @@ struct VbzSignalBuilder {
 struct PDZSignalBuilder {
     ExpandableBuffer<std::int64_t> offset_values;
     ExpandableBuffer<std::uint8_t> data_values;
-    pgnano::PDZWriterState m_state;
+    pdz::PDZWriterState m_state;
 };
 
 class POD5_FORMAT_EXPORT SignalTableWriter {

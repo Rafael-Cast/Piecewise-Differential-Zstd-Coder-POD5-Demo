@@ -11,7 +11,7 @@
 #include "default_histogram.h"
 #include "pdz_reader_state.h"
 
-namespace pgnano 
+namespace pdz 
 {
 
 class Decompressor
@@ -21,9 +21,9 @@ public:
     void reset();
     void decompress(uint8_t const * const & in, int16_t * const & dest, size_t const & bytes, PDZReaderState & state);
 private:
-    void decompress_metadata(uint8_t const * const & in, pgnano::Metadata & metadata);
-    void decompress_header(uint8_t const * const & in, pgnano::Header & header);
-    void decompress_signal(uint8_t const * const & in, pgnano::Header const & header, int16_t * const & dest, size_t const & bytes);
+    void decompress_metadata(uint8_t const * const & in, pdz::Metadata & metadata);
+    void decompress_header(uint8_t const * const & in, pdz::Header & header);
+    void decompress_signal(uint8_t const * const & in, pdz::Header const & header, int16_t * const & dest, size_t const & bytes);
     RangeCoder m_range_coder;
     Model m_high_byte_ctx_class;
     Model m_low_byte_ctx_class_zero, m_low_byte_ctx_class_non_zero;

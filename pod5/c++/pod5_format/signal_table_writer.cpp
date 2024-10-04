@@ -104,7 +104,7 @@ public:
 
     Status operator()(PDZSignalBuilder & builder) const
     {
-        ARROW_ASSIGN_OR_RAISE(auto compressed_signal, pgnano::compress_signal(m_signal, m_pool, m_read_data, m_is_last_batch, builder.m_state));
+        ARROW_ASSIGN_OR_RAISE(auto compressed_signal, pdz::compress_signal(m_signal, m_pool, m_read_data, m_is_last_batch, builder.m_state));
         
         ARROW_RETURN_NOT_OK(builder.offset_values.append(builder.data_values.size()));
         return builder.data_values.append_array(
@@ -164,7 +164,7 @@ public:
         std::shared_ptr<arrow::Buffer> null_bitmap;
 
         *m_dest = arrow::MakeArray(
-            arrow::ArrayData::Make(pgnano_signal(), length, {null_bitmap, offsets, value_data}, 0, 0));
+            arrow::ArrayData::Make(pdz_signal(), length, {null_bitmap, offsets, value_data}, 0, 0));
         
         return arrow::Status::OK();
     }
@@ -371,10 +371,10 @@ Result<SignalTableWriter> make_signal_table_writer(
         ARROW_RETURN_NOT_OK(vbz_builder.data_values.init_buffer(pool));
         signal_builder = vbz_builder;
     } else if (compression_type == SignalType::PDZSignal) {
-        PDZSignalBuilder pgnano_builder;
-        ARROW_RETURN_NOT_OK(pgnano_builder.offset_values.init_buffer(pool));
-        ARROW_RETURN_NOT_OK(pgnano_builder.data_values.init_buffer(pool));
-        signal_builder = std::move(pgnano_builder);//FIXME:
+        PDZSignalBuilder pdz_builder;
+        ARROW_RETURN_NOT_OK(pdz_builder.offset_values.init_buffer(pool));
+        ARROW_RETURN_NOT_OK(pdz_builder.data_values.init_buffer(pool));
+        signal_builder = std::move(pdz_builder);
     }
 
     auto signal_table_writer = SignalTableWriter(

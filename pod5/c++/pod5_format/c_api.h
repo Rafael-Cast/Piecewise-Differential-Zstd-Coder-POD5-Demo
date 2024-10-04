@@ -708,8 +708,6 @@ POD5_FORMAT_EXPORT pod5_error_t pod5_vbz_decompress_signal(
 /// \param[out]     read_id_string    Output string containing the string formatted UUID (expects a string of at least 37 bytes, one null byte is written.)
 POD5_FORMAT_EXPORT pod5_error_t pod5_format_read_id(read_id_t const read_id, char * read_id_string);
 
-POD5_FORMAT_EXPORT pod5_error_t pgnano_get_compression_stats(uint_fast64_t * bytes_written, uint_fast64_t * total_sample_count);
-
 #ifdef __cplusplus
 }
 #endif

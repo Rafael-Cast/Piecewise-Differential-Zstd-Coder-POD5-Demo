@@ -87,7 +87,7 @@ class POD5_FORMAT_EXPORT PDZSignalType : public arrow::ExtensionType {
 public:
     PDZSignalType() : ExtensionType(arrow::large_binary()) {}
 
-    std::string extension_name() const override { return "pgnano.signal"; }
+    std::string extension_name() const override { return "pdz.signal"; }
 
     bool ExtensionEquals(ExtensionType const & other) const override;
     std::shared_ptr<arrow::Array> MakeArray(std::shared_ptr<arrow::ArrayData> data) const override;
@@ -108,6 +108,6 @@ public:
     using ExtensionArray::ExtensionArray;
 };
 
-std::shared_ptr<PDZSignalType> pgnano_signal();
+std::shared_ptr<PDZSignalType> pdz_signal();
 
 }  // namespace pod5

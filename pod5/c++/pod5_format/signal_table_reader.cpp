@@ -42,7 +42,7 @@ SignalTableRecordBatch::SignalTableRecordBatch(
     std::shared_ptr<arrow::RecordBatch> const & batch,
     SignalTableSchemaDescription field_locations,
     arrow::MemoryPool * pool,
-    pgnano::PDZReaderState * pdz_state)
+    pdz::PDZReaderState * pdz_state)
 : TableRecordBatch(batch)
 , m_field_locations(field_locations)
 , m_pool(pool)
@@ -135,7 +135,7 @@ Status SignalTableRecordBatch::extract_signal_row(
     case SignalType::PDZSignal: {
         auto signal_column = pdz_signal_column();
         auto signal_compressed = signal_column->Value(row_index);
-        return pgnano::decompress_signal(signal_compressed, m_pool, samples, *m_pdz_state);
+        return pdz::decompress_signal(signal_compressed, m_pool, samples, *m_pdz_state);
     }
     }
 
@@ -199,7 +199,7 @@ SignalTableReader::SignalTableReader(
 , m_table_batches(num_record_batches)
 , m_batch_size(batch_size)
 {
-    m_pdz_state = std::make_unique<pgnano::PDZReaderState>();
+    m_pdz_state = std::make_unique<pdz::PDZReaderState>();
 }
 
 SignalTableReader::SignalTableReader(SignalTableReader && other)

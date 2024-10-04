@@ -1256,15 +1256,6 @@ pod5_error_t pod5_format_read_id(read_id_t const read_id, char * read_id_string)
 }
 }
 
-pod5_error_t pgnano_get_compression_stats(uint_fast64_t * bytes_written, uint_fast64_t * total_sample_count)
-{
-    pod5_reset_error();
-    auto stats = pgnano::Compressor::get_compression_stats();
-    *bytes_written = stats.bytes_written;
-    *total_sample_count = stats.total_sample_size;
-    return POD5_OK;
-}
-
 //---------------------------------------------------------------------------------------------------------------------
 /*
 std::shared_ptr<arrow::Schema> pyarrow_test() {

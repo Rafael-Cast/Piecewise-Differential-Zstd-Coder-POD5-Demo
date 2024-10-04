@@ -2,7 +2,7 @@
 
 #include "codecs.h"
 
-namespace pgnano
+namespace pdz
 {
     void Decompressor::reset()
     {
@@ -18,15 +18,15 @@ namespace pgnano
     void Decompressor::decompress(uint8_t const * const & in, int16_t * const & dest, size_t const & bytes, PDZReaderState & state)
     {
         size_t offset;
-        pgnano::Header header;
+        pdz::Header header;
         decompress_header(in, header);
-        offset = pgnano::header_size;
+        offset = pdz::header_size;
         assert(bytes >= offset);
         auto signal_in = in + offset;
         decompress_signal(signal_in, header, dest, bytes - offset);
     }
 
-    void Decompressor::decompress_metadata(uint8_t const * const & in, pgnano::Metadata & metadata)
+    void Decompressor::decompress_metadata(uint8_t const * const & in, pdz::Metadata & metadata)
     {
         metadata.samples = 0;
         for (size_t i = 0; i < sizeof(size_t); i++)
@@ -36,13 +36,13 @@ namespace pgnano
         metadata.pore_type = to_pore_type(in[sizeof(size_t)]);
     }
 
-    void Decompressor::decompress_header(uint8_t const * const & in, pgnano::Header & header)
+    void Decompressor::decompress_header(uint8_t const * const & in, pdz::Header & header)
     {
         header.is_raw = in[0] & 0x1;
         decompress_metadata(in + 1, header.metadata);
     }
 
-    void Decompressor::decompress_signal(uint8_t const * const & in, pgnano::Header const & header, int16_t * const & dest, size_t const & bytes)
+    void Decompressor::decompress_signal(uint8_t const * const & in, pdz::Header const & header, int16_t * const & dest, size_t const & bytes)
     {
         if (header.is_raw)
         {

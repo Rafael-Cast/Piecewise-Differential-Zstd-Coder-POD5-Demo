@@ -2,10 +2,10 @@
 
 #include <cstdint>
 
-namespace pgnano
+namespace pdz
 {
 
-enum PGNANO_PORE_TYPE : uint_fast8_t
+enum PDZ_PORE_TYPE : uint_fast8_t
 {
     R10_4_1 = 0,
     R10_3 = 1,
@@ -16,8 +16,8 @@ enum PGNANO_PORE_TYPE : uint_fast8_t
 constexpr uint_fast8_t mask = !(0x3);
 constexpr uint_fast8_t types_of_pore = 3;
 
-inline PGNANO_PORE_TYPE to_pore_type(uint_fast8_t x) { return (x & mask) ? UNKNOWN : static_cast<PGNANO_PORE_TYPE>(x) ; }
+inline PDZ_PORE_TYPE to_pore_type(uint_fast8_t x) { return (x & mask) ? UNKNOWN : static_cast<PDZ_PORE_TYPE>(x) ; }
 
-inline uint_fast8_t from_pore_type(PGNANO_PORE_TYPE x) { return (x & mask) ? UNKNOWN : x ; }
+inline uint_fast8_t from_pore_type(PDZ_PORE_TYPE x) { return (x & mask) ? UNKNOWN : x ; }
 
 };

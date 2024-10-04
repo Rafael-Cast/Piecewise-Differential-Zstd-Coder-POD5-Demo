@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace pgnano
+namespace pdz
 {
 
 class PDZReaderState

@@ -39,7 +39,7 @@ public:
         std::shared_ptr<arrow::RecordBatch> const & batch,
         SignalTableSchemaDescription field_locations,
         arrow::MemoryPool * pool,
-        pgnano::PDZReaderState * pdz_state);
+        pdz::PDZReaderState * pdz_state);
 
     std::shared_ptr<UuidArray> read_id_column() const;
     std::shared_ptr<arrow::LargeListArray> uncompressed_signal_column() const;
@@ -56,7 +56,7 @@ public:
 private:
     SignalTableSchemaDescription m_field_locations;
     arrow::MemoryPool * m_pool;
-    pgnano::PDZReaderState * m_pdz_state;
+    pdz::PDZReaderState * m_pdz_state;
 };
 
 class POD5_FORMAT_EXPORT SignalTableReader : public TableReader {
@@ -127,7 +127,7 @@ private:
 
     friend struct SignalTableReaderCacheCleaner;
 
-    std::unique_ptr<pgnano::PDZReaderState> m_pdz_state;
+    std::unique_ptr<pdz::PDZReaderState> m_pdz_state;
 };
 
 POD5_FORMAT_EXPORT Result<SignalTableReader> make_signal_table_reader(

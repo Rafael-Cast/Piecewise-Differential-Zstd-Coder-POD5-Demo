@@ -6,7 +6,7 @@
 
 constexpr unsigned MAX_SYMBOLS = 1 << 8;
 
-namespace pgnano 
+namespace pdz 
 {
 
 class Model

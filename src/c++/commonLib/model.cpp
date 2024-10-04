@@ -1,6 +1,6 @@
 #include "model.h"
 
-namespace pgnano 
+namespace pdz 
 {
     void Model::reset() { m_model.reset(); };
     void Model::reset(const std::array<uint16_t, MAX_SYMBOLS> & precalc_histogram) { m_model.reset(); };

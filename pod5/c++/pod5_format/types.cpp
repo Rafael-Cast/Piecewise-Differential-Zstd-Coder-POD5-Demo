@@ -156,10 +156,10 @@ std::shared_ptr<VbzSignalType> vbz_signal()
     return vbz_signal;
 }
 
-std::shared_ptr<PDZSignalType> pgnano_signal()
+std::shared_ptr<PDZSignalType> pdz_signal()
 {
-    static auto pgnano_signal = std::make_shared<PDZSignalType>();;
-    return pgnano_signal;
+    static auto pdz_signal = std::make_shared<PDZSignalType>();;
+    return pdz_signal;
 }
 
 std::shared_ptr<UuidType> uuid()
@@ -175,7 +175,7 @@ pod5::Status register_extension_types()
     if (++g_pod5_register_count == 1) {
         ARROW_RETURN_NOT_OK(arrow::RegisterExtensionType(uuid()));
         ARROW_RETURN_NOT_OK(arrow::RegisterExtensionType(vbz_signal()));
-        ARROW_RETURN_NOT_OK(arrow::RegisterExtensionType(pgnano_signal()));
+        ARROW_RETURN_NOT_OK(arrow::RegisterExtensionType(pdz_signal()));
     }
     return pod5::Status::OK();
 }
@@ -190,8 +190,8 @@ pod5::Status unregister_extension_types()
         if (arrow::GetExtensionType("minknow.vbz")) {
             ARROW_RETURN_NOT_OK(arrow::UnregisterExtensionType("minknow.vbz"));
         }
-        if (arrow::GetExtensionType("pgnano.signal")) {
-            ARROW_RETURN_NOT_OK(arrow::UnregisterExtensionType("pgnano.signal"));
+        if (arrow::GetExtensionType("pdz.signal")) {
+            ARROW_RETURN_NOT_OK(arrow::UnregisterExtensionType("pdz.signal"));
         }
     }
     return pod5::Status::OK();

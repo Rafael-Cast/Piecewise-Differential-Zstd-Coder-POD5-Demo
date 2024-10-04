@@ -1,6 +1,6 @@
 #include "pdz_writer_state.h"
 
-pgnano::PDZWriterState::PDZWriterState()
+pdz::PDZWriterState::PDZWriterState()
 {
-    m_pore_type_server = std::make_unique<pgnano::PoreTypeServer>();
+    m_pore_type_server = std::make_unique<pdz::PoreTypeServer>();
 }
