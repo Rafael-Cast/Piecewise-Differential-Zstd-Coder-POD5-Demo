@@ -9,7 +9,7 @@
 #include "metadata.h"
 #include "header.h"
 #include "default_histogram.h"
-#include "pgnano_reader_state.h"
+#include "pdz_reader_state.h"
 
 namespace pgnano 
 {
@@ -19,7 +19,7 @@ class Decompressor
 public:
     //Decompressor() : m_high_byte_ctx_class(high_byte_histogram), m_low_byte_ctx_class(low_byte_histogram) {};
     void reset();
-    void decompress(uint8_t const * const & in, int16_t * const & dest, size_t const & bytes, PGNanoReaderState & state);
+    void decompress(uint8_t const * const & in, int16_t * const & dest, size_t const & bytes, PDZReaderState & state);
 private:
     void decompress_metadata(uint8_t const * const & in, pgnano::Metadata & metadata);
     void decompress_header(uint8_t const * const & in, pgnano::Header & header);

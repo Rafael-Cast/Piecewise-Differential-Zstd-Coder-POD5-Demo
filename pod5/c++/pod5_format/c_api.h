@@ -518,8 +518,8 @@ enum CompressionOption {
     VBZ_SIGNAL_COMPRESSION = 1,
     /// \brief Write signals uncompressed to tables.
     UNCOMPRESSED_SIGNAL = 2,
-    /// \brief use PGNano to compress read singals in tables
-    PGNANO_SIGNAL_COMPRESSION = 3
+    /// \brief use PDZ to compress read signals in tables
+    PDZ_SIGNAL_COMPRESSION = 3
 };
 
 // Options to control how a file is written.

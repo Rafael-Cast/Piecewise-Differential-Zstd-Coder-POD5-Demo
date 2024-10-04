@@ -50,7 +50,7 @@ compile_copy () {
 
 activate_conda () {
     eval "$(conda shell.bash hook)"
-    conda activate pgnano
+    conda activate PDZ
     
 }
 

@@ -15,7 +15,7 @@ namespace pgnano
         m_range_coder.StartDecode();//FIXME: Estos resets serían mejor sacarlos o dejarlos pero agregar StartDecode y eso
     }
 
-    void Decompressor::decompress(uint8_t const * const & in, int16_t * const & dest, size_t const & bytes, PGNanoReaderState & state)
+    void Decompressor::decompress(uint8_t const * const & in, int16_t * const & dest, size_t const & bytes, PDZReaderState & state)
     {
         size_t offset;
         pgnano::Header header;

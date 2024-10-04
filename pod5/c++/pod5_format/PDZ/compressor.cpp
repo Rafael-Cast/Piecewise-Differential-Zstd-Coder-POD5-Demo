@@ -2,7 +2,7 @@
 
 #include "macros.h"
 #include "codecs.h"
-#include "pgnano_writer_state.h"
+#include "pdz_writer_state.h"
 #include "pore_type_server.h"
 
 namespace pgnano
@@ -69,7 +69,7 @@ namespace pgnano
         return {bytes_written, false};
     }
 
-    size_t Compressor::compress(pod5::ReadData const & read_data, std::size_t sample_count, int16_t const * samples, uint8_t* const & dest, pgnano::PGNanoWriterState & state) 
+    size_t Compressor::compress(pod5::ReadData const & read_data, std::size_t sample_count, int16_t const * samples, uint8_t* const & dest, pgnano::PDZWriterState & state) 
     {
         pgnano::Metadata metadata;
         pgnano::Header header;

@@ -5,10 +5,10 @@
 namespace pgnano
 {
 
-class PGNanoReaderState
+class PDZReaderState
 {
 public:
-    PGNanoReaderState();
+    PDZReaderState();
 private:
 };
 

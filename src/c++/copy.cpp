@@ -40,9 +40,9 @@ copy_cli_args parse_args(int argc, char **argv, char *curr_dir)
 	{
 		res.comp_opt = UNCOMPRESSED_SIGNAL;
 	}
-	else if (strncmp(argv[3], "--pgnano", 8) == 0)
+	else if (strncmp(argv[3], "--PDZ", 5) == 0)
 	{
-		res.comp_opt = PGNANO_SIGNAL_COMPRESSION;
+		res.comp_opt = PDZ_SIGNAL_COMPRESSION;
 	}
 	else
 	{

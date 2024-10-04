@@ -11,7 +11,7 @@
 #include "pod5_format/signal_table_writer.h"
 #include "pod5_format/thread_pool.h"
 #include "pod5_format/version.h"
-#include "pod5_format/pgnano/pore_type_server.h"
+#include "pod5_format/PDZ/pore_type_server.h"
 
 #include <arrow/io/file.h>
 #include <arrow/memory_pool.h>

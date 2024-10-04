@@ -5,7 +5,7 @@
 #include "pod5_format/read_table_reader.h"
 #include "pod5_format/signal_compression.h"
 #include "pod5_format/signal_table_reader.h"
-#include "pod5_format/pgnano/pgnano.h"
+#include "pod5_format/PDZ/pdz.h"
 
 #include <arrow/array/array_binary.h>
 #include <arrow/array/array_dict.h>
@@ -139,8 +139,8 @@ pod5::FileWriterOptions make_internal_writer_options(Pod5WriterOptions const * o
 
         if (options->signal_compression_type == UNCOMPRESSED_SIGNAL) {
             internal_options.set_signal_type(pod5::SignalType::UncompressedSignal);
-        } else if (options->signal_compression_type == PGNANO_SIGNAL_COMPRESSION) {
-            internal_options.set_signal_type(pod5::SignalType::PGNanoSignal);
+        } else if (options->signal_compression_type == PDZ_SIGNAL_COMPRESSION) {
+            internal_options.set_signal_type(pod5::SignalType::PDZSignal);
         }
 
         if (options->signal_table_batch_size != 0) {

@@ -97,26 +97,26 @@ arrow::Result<std::shared_ptr<arrow::DataType>> VbzSignalType::Deserialize(
     return std::make_shared<VbzSignalType>();
 }
 
-bool PGNanoSignalType::ExtensionEquals(arrow::ExtensionType const & other) const 
+bool PDZSignalType::ExtensionEquals(arrow::ExtensionType const & other) const 
 {
     return other.extension_name() == extension_name();
 }
 
-std::shared_ptr<arrow::Array> PGNanoSignalType::MakeArray(std::shared_ptr<arrow::ArrayData> data) const
+std::shared_ptr<arrow::Array> PDZSignalType::MakeArray(std::shared_ptr<arrow::ArrayData> data) const
 {
     DCHECK_EQ(data->type->id(), arrow::Type::EXTENSION);
     DCHECK_EQ(
     static_cast<arrow::ExtensionType const &>(*(data->type)).extension_name(), extension_name());
     DCHECK_EQ(true, ExtensionEquals(static_cast<arrow::ExtensionType const &>(*data->type)));
-    return std::make_shared<PGNanoSignalArray>(data);
+    return std::make_shared<PDZSignalArray>(data);
 }
 
-std::string PGNanoSignalType::Serialize() const
+std::string PDZSignalType::Serialize() const
 {
     return ""; // No metadata to serialize
 }
 
-arrow::Result<std::shared_ptr<arrow::DataType>> PGNanoSignalType::Deserialize(
+arrow::Result<std::shared_ptr<arrow::DataType>> PDZSignalType::Deserialize(
     std::shared_ptr<arrow::DataType> storage_type,
     std::string const & serialized_data) const 
 {
@@ -125,12 +125,12 @@ arrow::Result<std::shared_ptr<arrow::DataType>> PGNanoSignalType::Deserialize(
     }
     if (!storage_type->Equals(*arrow::large_binary())) {
         return arrow::Status::Invalid(
-            "Incorrect storage for PGNanoSignalType: '", storage_type->ToString(), "'");
+            "Incorrect storage for PDZSignalType: '", storage_type->ToString(), "'");
     }
-    return std::make_shared<PGNanoSignalType>();
+    return std::make_shared<PDZSignalType>();
 }
 
-gsl::span<std::uint8_t const> PGNanoSignalArray::Value(int64_t i) const
+gsl::span<std::uint8_t const> PDZSignalArray::Value(int64_t i) const
 {
     auto const array = std::static_pointer_cast<arrow::LargeBinaryArray const>(storage());
 
@@ -139,7 +139,7 @@ gsl::span<std::uint8_t const> PGNanoSignalArray::Value(int64_t i) const
     return gsl::make_span(value_ptr, value_length);
 }
 
-std::shared_ptr<arrow::Buffer> PGNanoSignalArray::ValueAsBuffer(int64_t i) const
+std::shared_ptr<arrow::Buffer> PDZSignalArray::ValueAsBuffer(int64_t i) const
 {
     auto const array = std::static_pointer_cast<arrow::LargeBinaryArray const>(storage());
 
@@ -156,9 +156,9 @@ std::shared_ptr<VbzSignalType> vbz_signal()
     return vbz_signal;
 }
 
-std::shared_ptr<PGNanoSignalType> pgnano_signal()
+std::shared_ptr<PDZSignalType> pgnano_signal()
 {
-    static auto pgnano_signal = std::make_shared<PGNanoSignalType>();;
+    static auto pgnano_signal = std::make_shared<PDZSignalType>();;
     return pgnano_signal;
 }
 

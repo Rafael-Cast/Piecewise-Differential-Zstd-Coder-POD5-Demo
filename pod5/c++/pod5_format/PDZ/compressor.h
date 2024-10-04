@@ -11,7 +11,7 @@
 #include "metadata.h"
 #include "header.h"
 #include "default_histogram.h"
-#include "pgnano_writer_state.h"
+#include "pdz_writer_state.h"
 
 namespace pgnano
 {
@@ -35,7 +35,7 @@ class Compressor
 public:
     //Compressor() : m_high_byte_ctx_class(high_byte_histogram), m_low_byte_ctx_class(low_byte_histogram) {};
     void reset();
-    size_t compress(pod5::ReadData const & read_data, std::size_t sample_count, int16_t const * samples, uint8_t* const & dest, pgnano::PGNanoWriterState & state);
+    size_t compress(pod5::ReadData const & read_data, std::size_t sample_count, int16_t const * samples, uint8_t* const & dest, pgnano::PDZWriterState & state);
     static inline std::size_t compressed_signal_max_size(std::size_t sample_count, pod5::ReadData read_data) { return sample_count*sizeof(int16_t) + header_size + pgnano::overflow_buffer_bytes; }
     static inline void update_compression_stats(std::uint_fast64_t bytes, std::uint_fast64_t sample_size) 
     {

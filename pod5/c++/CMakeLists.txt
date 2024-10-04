@@ -119,21 +119,21 @@ add_library(pod5_format_fork ${pod5_library_type}
     pod5_format/svb16/shuffle_tables.hpp
     pod5_format/svb16/simd_detect_x64.hpp
 
-    pod5_format/pgnano/pgnano.cpp
-    pod5_format/pgnano/pgnano.h
-    pod5_format/pgnano/compressor.cpp
-    pod5_format/pgnano/compressor.h
-    pod5_format/pgnano/metadata.h
-    pod5_format/pgnano/header.h
-    pod5_format/pgnano/decompressor.cpp
-    pod5_format/pgnano/decompressor.h
-    pod5_format/pgnano/pore_type_server.h
-    pod5_format/pgnano/pore_type_server.cpp
+    pod5_format/PDZ/pdz.cpp
+    pod5_format/PDZ/pdz.h
+    pod5_format/PDZ/compressor.cpp
+    pod5_format/PDZ/compressor.h
+    pod5_format/PDZ/metadata.h
+    pod5_format/PDZ/header.h
+    pod5_format/PDZ/decompressor.cpp
+    pod5_format/PDZ/decompressor.h
+    pod5_format/PDZ/pore_type_server.h
+    pod5_format/PDZ/pore_type_server.cpp
 
-    pod5_format/pgnano/pgnano_reader_state.h
-    pod5_format/pgnano/pgnano_reader_state.cpp
-    pod5_format/pgnano/pgnano_writer_state.h
-    pod5_format/pgnano/pgnano_writer_state.cpp
+    pod5_format/PDZ/pdz_reader_state.h
+    pod5_format/PDZ/pdz_reader_state.cpp
+    pod5_format/PDZ/pdz_writer_state.h
+    pod5_format/PDZ/pdz_writer_state.cpp
 )
 
 set(public_headers)

@@ -5,7 +5,7 @@ namespace pod5 {
 enum class SignalType {
     UncompressedSignal,
     VbzSignal,
-    PGNanoSignal
+    PDZSignal
 };
 
 }

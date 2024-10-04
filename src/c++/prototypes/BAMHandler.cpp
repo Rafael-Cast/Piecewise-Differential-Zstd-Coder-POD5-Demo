@@ -1,4 +1,4 @@
-#include "pod5_format/pgnano/BAM_handler.h"
+#include "pod5_format/PDZ/BAM_handler.h"
 
 int main()
 {
