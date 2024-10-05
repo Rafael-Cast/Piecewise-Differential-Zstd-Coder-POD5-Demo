@@ -80,9 +80,19 @@ While running on containers is certainly convenient, it involves some overhead w
 
 Containers are not a problem if you simply want either a (very) rough time estimate or just want to measure compression ratios.
 
-### Using our launcher
+#### Using our launcher
 
-//TODO:?
+Although we recommend you use the previous method to run our code, we also provide a simple "launcher" which simplifies these tasks for you. To run it, you'll need a python 3 installation and docker. You also need to run `pip install docker`.
+
+To build the image run:
+
+`python launcher.py build`
+
+And then run:
+
+`python launcher.py run <in_pod5> <out_pod5> <algorithm_without_--_prefix>`
+
+to run the image.
 
 ### Native build
 
