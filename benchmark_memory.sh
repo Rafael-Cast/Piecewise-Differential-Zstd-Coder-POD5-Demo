@@ -1,1 +1,0 @@
-/usr/bin/time -v ./build/src/c++/copy /data/datananoraw/dna/Human_GiaBAT_ONT/7646a9e4-PAG65784_pass_f306681d_16a70748_508.pod5 ./delete.out --pgnano 2>> memory_benchmark
