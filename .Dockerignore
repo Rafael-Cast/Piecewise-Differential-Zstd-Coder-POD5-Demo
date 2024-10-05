@@ -1,0 +1,5 @@
+build
+*.csv
+*.pod5
+pod5/python/pod5/venv
+venv
