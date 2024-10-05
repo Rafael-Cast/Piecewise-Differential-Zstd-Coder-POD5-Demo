@@ -15,9 +15,8 @@ RUN ~/miniconda3/bin/conda init bash && \
     conda env create --file=env-docker.yaml && \
     conda activate PDZ && \
     bash build.sh init && \
-    bash build.sh c clean release cmklog
-
-RUN conda install libstdcxx-ng=12
+    bash build.sh c clean release cmklog && \
+    conda install libstdcxx-ng=12
 
 ENTRYPOINT ["/builder/build/src/c++/copy"]
 
