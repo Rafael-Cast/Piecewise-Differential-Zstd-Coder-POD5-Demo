@@ -104,4 +104,21 @@ To run from a binary compiled in your host machine (ie: no docker), just execute
 
 We don't provide a sample pod5 file as they are normally pretty large. Nevertheless, you can convert arbitrary fast5 file you have using either ONT's [pod5 package](https://pypi.org/project/pod5/) (recommended for batch tests but is not covered in this readme) or [ONT's online pod5 converter](https://pod5.nanoporetech.com/) (recommended for small or interactive tests).
 
-If you don't have any pod5 files at your disposal, ONT provides an excellent data repository [here](https://labs.epi2me.io/category/data-releases/) ([landing page](https://labs.epi2me.io/dataindex/), [tutorial](https://labs.epi2me.io/tutorials/)). 
+If you don't have any pod5 files at your disposal, ONT provides an excellent data repository [here](https://labs.epi2me.io/category/data-releases/) ([landing page](https://labs.epi2me.io/dataindex/), [tutorial](https://labs.epi2me.io/tutorials/)).
+
+
+### An example
+
+In this section we give you and example of how to download a public dataset from the aforementioned data repository, even though our demo program will work with **any pod5 file** (which can be obtained from **preexisting fast5 files**). To follow this example, you'll need to install the [aws cli](https://aws.amazon.com/cli/).
+
+We will use a [tumoral cell dataset](https://labs.epi2me.io/colo-2024.03/) for this example. **The files in this dataset are already in pod5 format**, so we don't need to convert them from fast5.
+
+To download the full dataset (~130,7 GB) run: `aws s3 cp --no-sign-request "s3://ont-open-data/colo829_2024.03/flowcells/colo829/" . --recursive`
+
+To download any single file:
+
+`aws s3 cp --no-sign-request "s3://ont-open-data/colo829_2024.03/flowcells/colo829/<path_to_file>" .`
+
+To download a sample file (already in pod5 format):
+
+`aws s3 cp --no-sign-request "s3://ont-open-data/$(aws s3 ls --no-sign-request "s3://ont-open-data/colo829_2024.03/flowcells/colo829/" --recursive --no-paginate | grep .pod5 | head -n 1 | awk '{printf $4}' 2> /dev/null)" .` (You might get a `Broken Pipe` error which you can simply ignore. That's because we won't read the whole stream from `aws s3 ls`.)
