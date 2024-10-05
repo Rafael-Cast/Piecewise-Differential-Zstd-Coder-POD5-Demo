@@ -47,6 +47,8 @@ We also provide a Dockerfile to build or program inside a container engine. To b
 
 Although we only tried Docker, other Docker-compatible container engines might work.
 
+Alternatively you can use our simple "launcher" (not recommended), which is described [here](#using-our-launcher).
+
 ## Running the demo
 
 In order to run the demo, you'll need any pod5 file. To download a sample pod5 file refer to [Getting a sample pod5 file].
@@ -100,4 +102,6 @@ To run from a binary compiled in your host machine (ie: no docker), just execute
 
 ## Getting a sample pod5 file
 
-TODO: WIP
+We don't provide a sample pod5 file as they are normally pretty large. Nevertheless, you can convert arbitrary fast5 file you have using either ONT's [pod5 package](https://pypi.org/project/pod5/) (recommended for batch tests but is not covered in this readme) or [ONT's online pod5 converter](https://pod5.nanoporetech.com/) (recommended for small or interactive tests).
+
+If you don't have any pod5 files at your disposal, ONT provides an excellent data repository [here](https://labs.epi2me.io/category/data-releases/) ([landing page](https://labs.epi2me.io/dataindex/), [tutorial](https://labs.epi2me.io/tutorials/)). 
