@@ -1,6 +1,7 @@
 #pragma once
 
 #include <regex>
+#include <array>
 
 #include "known_pore_types.h"
 
