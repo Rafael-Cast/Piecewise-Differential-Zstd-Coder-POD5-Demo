@@ -20,13 +20,17 @@ def folder_or_self(s):
 def parse_path_for_docker_run(s):
     return folder_or_self(to_abs(s))
 
+
 def build_docker_image():
-    client.images.build(
-        path='.',
-        dockerfile='Dockerfile',
-        tag='pdz:latest',
-        rm=True
+    client = docker.APIClient(base_url="unix://var/run/docker.sock")
+
+    response = client.build(
+        path=".", dockerfile="Dockerfile", tag="pdz:latest", rm=True, decode=True
     )
+
+    for chunk in response:
+        if "stream" in chunk:
+            print(chunk["stream"].strip())
 
 
 def run_on_container(in_file, out_file, alg):
