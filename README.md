@@ -28,6 +28,8 @@ You also need to install the following Python packages (we used Python 3.11):
 - setuptools 68.0.0
 - setuptools_scm 7.1.0
 
+In `env.yaml` you can find a dump of one of the conda environments we used when developing the application. Note that we also relied on system-wide libraries, so you might need to install additional packages.
+
 ### Building the project
 
 To build the project you can simply use the provided build.sh script. Note that in order to use this script you **MUST** either provide a conda environment called PDZ, even if it's "empty" or comment out the `activate_conda` line in the script.
