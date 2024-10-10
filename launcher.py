@@ -1,3 +1,4 @@
+import shutil
 import docker
 import argparse
 import os
@@ -22,6 +23,8 @@ def parse_path_for_docker_run(s):
 
 
 def build_docker_image():
+    if os.path.isdir("build"):
+        shutil.rmtree("build")
     client = docker.APIClient(base_url="unix://var/run/docker.sock")
 
     response = client.build(
