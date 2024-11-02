@@ -3,3 +3,4 @@ build
 *.pod5
 pod5/python/pod5/venv
 venv
+sample.pod5

@@ -1,10 +1,26 @@
 # Nanopore Compression Integrated Demo
 
-This project serves as a demo integrated into pod5 of our compression algorithm (PDZ, Piecewise Differential Zstd Coder).
+This project serves as a demo of our compression algorithm (PDZ, Piecewise Differential Zstd Coder), integrated into the pod5 library and file format.
 
-In here, you'll find a modified pod5 version, which adds a new compression method for the signal table which uses our compression algorithm, as well as a CLI utility program that uses standard pod5 C api methods to copy a source pod5 file into another pod5 file with the desired compression algorithm (Vbz, 286BitDistributionZstd, uncompressed) applied to the signal table.
+In here, you'll find a modified version of the pod5 library, which adds a new compression method for the signal table which uses our compression algorithm, as well as a CLI utility program that uses standard pod5 C api methods to copy a source pod5 file into another pod5 file with the desired compression algorithm (Vbz, PDZ, uncompressed) applied to the signal table.
 
-You can either build the binary on your local environment or use our provided Dockerfile to build a Docker image for the demo.
+You can either build the binary on your local environment or use our provided Dockerfile to build a Docker image for the demo. We also have a [quickstart section](#Quickstart).
+
+## Quickstart
+
+If you want to quickly run our demo, we provide a quickstart launcher script, called `launcher.py`. In order to run this script, you'll need python 3 and docker. You'll also need to run `pip install docker boto3` or your equivalent method of installing the docker library for python.
+
+You can either run our full sample quickstart by running `python launcher.py quickstart`, or you can run our individual steps (recommended if you plan on doing more experiments):
+
+Then, you just need to run `python launcher.py build`, which will build the demo's image for you. Ensure that you have docker running before running our launcher.
+
+To obtain a sample pod5 file run: `python launcher.py download_sample`
+
+To compress the file using PDZ then run: `python launcher.py run sample.pod5 compressed.pod5 PDZ`
+
+If you want to retrieve the original pod5 file, simply run: `python launcher.py run compressed.pod5 restored.pod5 VBZ`
+
+The following sections will explain different build alternatives and data retrieval methods if you want to keep on experimenting.
 
 ## Local build
 
@@ -124,3 +140,4 @@ To download any single file:
 To download a sample file (already in pod5 format):
 
 `aws s3 cp --no-sign-request "s3://ont-open-data/$(aws s3 ls --no-sign-request "s3://ont-open-data/colo829_2024.03/flowcells/colo829/" --recursive --no-paginate | grep .pod5 | head -n 1 | awk '{printf $4}' 2> /dev/null)" .` (You might get a `Broken Pipe` error which you can simply ignore. That's because we won't read the whole stream from `aws s3 ls`.)
+
