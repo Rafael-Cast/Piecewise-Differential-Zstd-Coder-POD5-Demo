@@ -151,3 +151,8 @@ To download a sample file (already in pod5 format):
 
 `aws s3 cp --no-sign-request "s3://ont-open-data/$(aws s3 ls --no-sign-request "s3://ont-open-data/colo829_2024.03/flowcells/colo829/" --recursive --no-paginate | grep .pod5 | head -n 1 | awk '{printf $4}' 2> /dev/null)" .` (You might get a `Broken Pipe` error which you can simply ignore. That's because we won't read the whole stream from `aws s3 ls`.)
 
+## License
+
+The sample data we used in our quickstart is licensed under Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)[https://creativecommons.org/licenses/by-nc/4.0/] and retrieved from ONT's public dataset repository.
+
+The original POD5 library is licensed under Mozilla Public License, v. 2.0. As requested, a copy of such a license can be found in the file `pod5-License.md`.
