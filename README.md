@@ -1,6 +1,6 @@
 # Nanopore Compression Integrated Demo
 
-This project serves as a demo of our compression algorithm (PDZ, Piecewise Differential Zstd Coder), integrated into the pod5 library and file format.
+This project serves as a demo of our compression algorithm ([PDZ](https://github.com/Rafael-Cast/Piecewise-Differential-Zstd-Coder), Piecewise Differential Zstd Coder), integrated into the [pod5 library](https://github.com/nanoporetech/pod5-file-format) and file format.
 
 In here, you'll find a modified version of the pod5 library, which adds a new compression method for the signal table which uses our compression algorithm, as well as a CLI utility program that uses standard pod5 C api methods to copy a source pod5 file into another pod5 file with the desired compression algorithm (Vbz, PDZ, uncompressed) applied to the signal table.
 
@@ -8,26 +8,28 @@ You can either build the binary on your local environment or use our provided Do
 
 ## Quickstart
 
-If you want to quickly run our demo, we provide a quickstart launcher script, called `launcher.py`. In order to run this script, you'll need python 3 and docker. You'll also need to run `pip install docker boto3` or your equivalent method of installing the docker library for python.
+If you want to quickly run our demo, we provide a quickstart launcher script, called `launcher.py`. In order to run this script, you'll need python 3 and docker. You'll also need to run `pip install docker boto3` or your equivalent method of installing the python dependencies. Ensure that you have docker running before running our launcher.
 
 You can either run our full sample quickstart by running `python launcher.py quickstart`, or you can run our individual steps (recommended if you plan on doing more experiments):
 
-Then, you just need to run `python launcher.py build`, which will build the demo's image for you. Ensure that you have docker running before running our launcher.
+To build the project, you just need to run `python launcher.py build`.
 
 To obtain a sample pod5 file run: `python launcher.py download_sample`
 
-To compress the file using PDZ then run: `python launcher.py run sample.pod5 compressed.pod5 PDZ`
+To compress the file using PDZ run: `python launcher.py run sample.pod5 compressed.pod5 PDZ`
 
 If you want to retrieve the original pod5 file, simply run: `python launcher.py run compressed.pod5 restored.pod5 VBZ`
 
 The following sections will explain different build alternatives and data retrieval methods if you want to keep on experimenting.
 
-## Local build
+## Additional build options
+
+### Local build
 
 The code was only tested in a Linux environment, no other OSes are tested.
 The most complex part of building this project are satisfying it's dependencies. We used a strategy combining system libraries plus a conda environment, but feel free to use any other strategy to install required packages and libraries. We continue with a list of notable dependencies which you'll need to install (note that for most you'll need both the library and the development package):
 
-### Required dependencies
+#### Required dependencies
 
 - Arrow version 8 (we used 8.0.1)
 - Flatbuffers 2.0.0
@@ -46,7 +48,7 @@ You also need to install the following Python packages (we used Python 3.11):
 
 In `env.yaml` you can find a dump of one of the conda environments we used when developing the application. Note that we also relied on system-wide libraries, so you might need to install additional packages.
 
-### Building the project
+#### Building the project
 
 To build the project you can simply use the provided build.sh script. Note that in order to use this script you **MUST** either provide a conda environment called PDZ, even if it's "empty" or comment out the `activate_conda` line in the script.
 For your first installation, you should run:
@@ -59,19 +61,25 @@ Then, for either the first or any other build, you should run:
 
 The executable will be in: `build/src/c++/copy`
 
-## Docker build
+### Docker build
 
 We also provide a Dockerfile to build or program inside a container engine. To build our binary with Docker, just run: `docker build -t pdz:latest .`.
 
 Although we only tried Docker, other Docker-compatible container engines might work.
 
-Alternatively you can use our simple "launcher" (not recommended), which is described [here](#using-our-launcher).
+Alternatively you can use our simple "launcher".
+
+### Launcher build
+
+In order to build the project with our launcher, you'll need both a running docker installation, and python 3, with the following packages: `docker`, `boto3`.
+
+In order to compile the project, just run: `python launcher.py build`.
 
 ## Running the demo
 
-In order to run the demo, you'll need any pod5 file. To download a sample pod5 file refer to [Getting a sample pod5 file].
-The program will take as an input a pod5 file with any of the supported compression algorithms: Vbz, the presented compression algorithm or no compression at all. You'll also specify an output path and an output file compression algorithm. Then, the program will copy the input pod5 file into an equivalent output pod5 file whose signal table is now compressed with the specified compression algorithm.
-Note that we compile a modified pod5 library version which implements the full C api for our signal compression method. This mean you can write any arbitrary C / C++ programs that manipulates pod5 files that you could write with the original C++ pod5 library  while using our novel compression algorithm.
+In order to run the demo, you'll need any pod5 file. To download a sample pod5 file refer to our Getting a sample pod5 file section down below.
+The program will take as an input a pod5 file with any of the supported compression algorithms: `Vbz`, `pdz` or `no compression`. You'll also specify an output path and an output file compression algorithm. Then, the program will copy the input **pod5 file** into an equivalent output **pod5 file** whose signal table is now compressed with the specified compression algorithm.
+Note that we compile a modified pod5 library version which implements the full C api for our signal compression method. **This mean you can write any arbitrary C / C++ programs that manipulates pod5 files that you could write with the original C++ pod5 library while using our novel compression algorithm**.
 
 To run the program pass the arguments as follows:
 
@@ -86,7 +94,7 @@ Where `<compression_algorithm>` is one of:
 
 While you can certainly run a native build, unless you are doing performance benchmarks we strongly recommend running our code inside a Docker container. Just doing `docker run pdz` (assuming you named the image you built pdz), will execute the binary and you can pass arguments simply by doing `docker run pdz <arg1> <arg2> <arg3>`.
 
-Remember that the files you'll find in your Docker container are not the same as in your host machine, so you need to mount volumes in order to actually run the program. Don't worry files won't actually be copied (at least on a Linux based system). For instance, suppose that we want to compress a pod5 file (`PAU59949_pass_ed4a9f02_3084670d_232.pod5`) from the `samples` folder into the same folder, using PDZ and naming the result as `out.pod5` we can run:
+Remember that the files you'll find in your Docker container are not the same as in your host machine, so **you need to mount volumes** in order to actually run the program. Don't worry, files won't actually be copied (at least on a Linux based system). For instance, suppose that we want to compress a pod5 file (`PAU59949_pass_ed4a9f02_3084670d_232.pod5`) from the `samples` folder into the same folder, using PDZ and naming the result as `out.pod5` we can run:
 
 `docker run -v $(pwd)/samples:/data/in -v $(pwd)/samples:/data/out pdz /data/in/PAU59949_pass_ed4a9f02_3084670d_232.pod5 /data/out/out.pod5 --PDZ`
 
@@ -120,9 +128,11 @@ To run from a binary compiled in your host machine (ie: no docker), just execute
 
 ## Getting a sample pod5 file
 
-We don't provide a sample pod5 file as they are normally pretty large. Nevertheless, you can convert arbitrary fast5 file you have using either ONT's [pod5 package](https://pypi.org/project/pod5/) (recommended for batch tests but is not covered in this readme) or [ONT's online pod5 converter](https://pod5.nanoporetech.com/) (recommended for small or interactive tests).
+We don't provide a sample pod5 file as they are normally pretty large and would bloat the repository unnecessarily, but we provide a script to download a sample pod5 file. To run it, you'll need to have the `boto3` package installed in your python environment and then just execute: `python launcher.py download_sample`.
 
-If you don't have any pod5 files at your disposal, ONT provides an excellent data repository [here](https://labs.epi2me.io/category/data-releases/) ([landing page](https://labs.epi2me.io/dataindex/), [tutorial](https://labs.epi2me.io/tutorials/)).
+If you have fast5 files in which you want to compare our algorithm, you can convert arbitrary fast5 files using either ONT's [pod5 package](https://pypi.org/project/pod5/) (recommended for batch tests but is not covered in this readme) or [ONT's online pod5 converter](https://pod5.nanoporetech.com/) (recommended for small or interactive tests).
+
+ONT also provides an excellent data repository [here](https://labs.epi2me.io/category/data-releases/) ([landing page](https://labs.epi2me.io/dataindex/), [tutorial](https://labs.epi2me.io/tutorials/)).
 
 
 ### An example
