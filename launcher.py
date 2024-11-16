@@ -3,6 +3,9 @@ import docker
 import argparse
 import os
 import time
+import boto3
+from botocore import UNSIGNED
+from botocore.config import Config
 
 client = docker.from_env()
 
@@ -69,11 +72,6 @@ def run_on_container(in_file, out_file, alg):
         print(f"Unexpected error: {e}")
         raise e
 
-import boto3
-from botocore import UNSIGNED
-from botocore.config import Config
-
-
 def get_first_pod5_file(bucket, prefix, s3):
     response = s3.list_objects_v2(Bucket=bucket, Prefix=prefix)
 
@@ -118,11 +116,13 @@ def run_parser_body(in_path, out_path, alg):
     elapsed_seconds = t2 - t1
 
     if output_size < input_size:
-        print(f"Compressed file is smaller!")
+        print(f"Output file is smaller than input!")
     else:
-        print(f"Compressed file is bigger...")
+        print(f"Output file is bigger than input...")
 
     size_ratio = output_size / input_size
+    percentual_relative_difference = 100 * (output_size - input_size) / input_size
+    print(f'Percentual relative difference is {percentual_relative_difference:.3f}')
     print(f"Size ratio is {size_ratio:.3f}")
 
     print(f"Processed {(input_size / elapsed_seconds) / (2 ** 20):.3f} MB/s")
@@ -160,10 +160,25 @@ def main():
         build_docker_image()
         print('Downloading sample pod5 file...')
         download_sample_file()
-        print('Compressing with PDZ...')
-        run_parser_body('sample.pod5', 'compressed.pod5', 'PDZ')
-        print('Recovering original file...')
-        run_parser_body('compressed.pod5', 'recovered.pod5', 'VBZ')
+
+        print('Compressing the sample file with PDZ...')
+        run_on_container('sample.pod5', 'compressed.pod5', 'PDZ')
+        print('Recovering original file using VBZ...')
+        run_on_container('compressed.pod5', 'recovered.pod5', 'VBZ')
+        
+        vbz_compressed_size = os.stat('recovered.pod5').st_size
+        pdz_compressed_size = os.stat('compressed.pod5').st_size
+        if vbz_compressed_size > pdz_compressed_size:
+            print('The file compressed with PDZ is SMALLER than with VBZ!')
+        else:
+            print('The file compressed with PDZ is BIGGER than with VBZ...')
+
+        percentual_diff = 100 * (pdz_compressed_size - vbz_compressed_size) / pdz_compressed_size
+        size_ratio = pdz_compressed_size / vbz_compressed_size
+
+        print(f'Their size ratio (PDZ / VBZ) is: {size_ratio:.3f}')
+        print(f'The percentual relative difference is: {percentual_diff:.3f}%')
+        
 
 if __name__ == "__main__":
     main()
