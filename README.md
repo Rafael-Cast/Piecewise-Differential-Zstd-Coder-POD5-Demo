@@ -18,7 +18,6 @@ Run the full sample quickstart:
 
 ```sh
 python launcher.py quickstart
-
 ```
 
 If you have a sample POD5 file:
@@ -114,8 +113,7 @@ Run the compression using the locally built executable:
 ./copy <input_pod5_file> <output_pod5_file> --<compression_algorithm>
 ```
 
-Local builds are the only one we'd expect reasonably precise computational efficiency results, so if you are interested in evaluating this aspect, please do a local build. All our reported benchmarks are done on native builds, with specific benchmark programs in order to achieve more accurate results. 
-This method also has the advantage of building a modified version of the POD5 library which you can use to link to a wide range of C / C++ programs that depend on POD5, while retaining the ability to use our novel compression algorithms.
+Local builds are the only one we'd expect reasonably precise computational efficiency results, so **if you are interested in evaluating runtimes, please use a local build**. All our reported benchmarks are done on native builds, with specific benchmark programs in order to achieve more accurate results. 
 If you are only interested in compression results, we recommend either using our launcher or performing a Docker build if you want a finer-grained control.
 
 ### Docker build
@@ -136,7 +134,7 @@ Remember to mount volumes to access files from the host machine as in this examp
 docker run -v $(pwd)/samples:/data/in -v $(pwd)/samples:/data/out pdz /data/in/PAU59949_pass_ed4a9f02_3084670d_232.pod5 /data/out/out.pod5 --PDZ
 ```
 
-Alternatively you can use our simple "launcher" (review our quickstart section for dependencies).
+Alternatively you can use our simple "launcher".
 
 ### Launcher build
 
