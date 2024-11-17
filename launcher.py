@@ -144,6 +144,19 @@ def main():
 
     download_sample_parser = subparsers.add_parser('download_sample', help='Downloads a sample pod5 file')
     quickstart_parser = subparsers.add_parser('quickstart', help='Runs a quickstart')
+    quickstart_parser.add_argument(
+        '--file',
+        type=str,
+        help='A POD5 file to use as base for our quickstart demo. If not provided, we will download a sample pod5 file',
+        default=None,
+        nargs='?',
+    )
+    quickstart_parser.add_argument(
+        "--no_build",
+        action="store_true",
+        help="Skip docker build",
+        default=False
+    )
 
     # Parse the arguments
     args = parser.parse_args()
@@ -156,29 +169,111 @@ def main():
     elif args.command == 'download_sample':
         download_sample_file()
     elif args.command == 'quickstart':
-        print('Building docker image...')
-        build_docker_image()
-        print('Downloading sample pod5 file...')
-        download_sample_file()
+        if not args.no_build:
+            print('Building docker image...')
+            build_docker_image()
+        else:
+            print('Skipping docker build...')
+            print('Ensure that you ran `python launcher.py build`')
+        sample_file_path = args.file
+        if sample_file_path is None:
+            print('Downloading sample pod5 file...')
+            download_sample_file()
+            sample_file_path = 'sample.pod5'
+        else:
+            print(f'Using provided {sample_file_path} as base input file!')
 
-        print('Compressing the sample file with PDZ...')
-        run_on_container('sample.pod5', 'compressed.pod5', 'PDZ')
-        print('Recovering original file using VBZ...')
+        print('We will run a compression test first')
+
+        print('\tCompressing the sample file with PDZ...')
+        run_on_container(sample_file_path, 'compressed.pod5', 'PDZ')
+        print('\tRecovering original file using VBZ...')
         run_on_container('compressed.pod5', 'recovered.pod5', 'VBZ')
-        
+
         vbz_compressed_size = os.stat('recovered.pod5').st_size
         pdz_compressed_size = os.stat('compressed.pod5').st_size
         if vbz_compressed_size > pdz_compressed_size:
-            print('The file compressed with PDZ is SMALLER than with VBZ!')
+            print('\tThe file compressed with PDZ is SMALLER than with VBZ!')
         else:
-            print('The file compressed with PDZ is BIGGER than with VBZ...')
+            print('\tThe file compressed with PDZ is BIGGER than with VBZ...')
 
         percentual_diff = 100 * (pdz_compressed_size - vbz_compressed_size) / pdz_compressed_size
         size_ratio = pdz_compressed_size / vbz_compressed_size
 
-        print(f'Their size ratio (PDZ / VBZ) is: {size_ratio:.3f}')
-        print(f'The percentual relative difference is: {percentual_diff:.3f}%')
-        
+        print(f'\tTheir size ratio (PDZ / VBZ) is: {size_ratio:.3f}')
+        print(f'\tThe percentual relative difference is: {percentual_diff:.3f}%')
+
+        print(f'\tYou can review the compressed and recovered files at compressed.pod5 and recovered.pod5 respectively')
+
+        print('Now, we will run a simple runtime test')
+        print('Please note that:')
+        print('\t- This is run on only a single sample file and')
+        print('\t- we are running with virtualization (Docker)')
+        print('The times reported are really for demonstration purposes only and gaining a rough overview; no real measurements can be extracted from this experiment')
+
+        print('\tDecompressing sample file to ensure consistency...')
+        run_on_container(sample_file_path, 'input_time_test.pod5', 'uncompressed')
+
+        print('\tCompressing with PDZ...')
+        t1_pdz_compression = time.time()
+        run_on_container('input_time_test.pod5', 'pdz_compressed.pod5', 'PDZ')
+        t2_pdz_compression = time.time()
+
+        print('\tDecompressing with PDZ...')
+        t1_pdz_decompression = time.time()
+        run_on_container('pdz_compressed.pod5', 'pdz_decompressed.pod5', 'uncompressed')
+        t2_pdz_decompression = time.time()
+
+        print('\tCompressing with VBZ...')
+        t1_vbz_compression = time.time()
+        run_on_container('input_time_test.pod5', 'vbz_compressed.pod5', 'VBZ')
+        t2_vbz_compression = time.time()
+
+        print('\tDecompressing with VBZ...')
+        t1_vbz_decompression = time.time()
+        run_on_container('vbz_compressed.pod5', 'vbz_decompressed.pod5', 'uncompressed')
+        t2_vbz_decompression = time.time()
+
+        def compression_formatted_report(filename, t2, t1, algorithm):
+            mb = os.stat(filename).st_size >> 20
+            print(f'\t{algorithm} compressed a {mb:.3f} MB file in {(t2 - t1):.3f} seconds')
+
+        compression_formatted_report(
+            'input_time_test.pod5',
+            t2_pdz_compression,
+            t1_pdz_compression,
+            'PDZ',
+        )
+        compression_formatted_report(
+            "input_time_test.pod5",
+            t2_vbz_compression,
+            t1_vbz_compression,
+            "VBZ",
+        )
+
+        def decompression_formatted_report(filename, t2, t1, algorithm):
+            mb = os.stat(filename).st_size >> 20
+            print(f'\t{algorithm} decompressed {mb:.3f} MB in {(t2 - t1):.3f} seconds')
+
+        decompression_formatted_report(
+            "pdz_decompressed.pod5",
+            t2_pdz_decompression,
+            t1_pdz_decompression,
+            'PDZ'
+        )
+        decompression_formatted_report(
+            "vbz_decompressed.pod5",
+            t2_vbz_decompression,
+            t1_vbz_decompression,
+            "VBZ"
+        )
+
+        print('Cleaning up...')
+        os.remove('vbz_decompressed.pod5')
+        os.remove("pdz_decompressed.pod5")
+        os.remove('vbz_compressed.pod5')
+        os.remove("pdz_compressed.pod5")
+        os.remove('input_time_test.pod5')
 
 if __name__ == "__main__":
     main()

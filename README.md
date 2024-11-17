@@ -18,9 +18,22 @@ Run the full sample quickstart:
 
 ```sh
 python launcher.py quickstart
+
 ```
 
-Or run individual steps for more control:
+If you have a sample POD5 file:
+
+```sh
+python launcher.py quickstart --file=<path>
+```
+
+If you have already built our docker image:
+
+```sh
+python launcher.py quickstart --no_build
+```
+
+You can also run individual steps for more control:
 
 1. Build the project:
 
